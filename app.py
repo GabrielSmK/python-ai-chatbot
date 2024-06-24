@@ -5,6 +5,7 @@ import os
 from time import sleep
 from helpers import *
 from selecionar_persona import *
+from selecionar_documento import *
 
 load_dotenv()
 
@@ -14,12 +15,12 @@ model = "gpt-4"
 app = Flask(__name__)
 app.secret_key = 'chatbot'
 
-context = carrega("dados/musica.txt")
-
 def bot(prompt):
     maximo_tentativas = 1
     repeticao = 0
     personalidade = personas[selecionar_persona(prompt)]
+    context = selecionar_contexto(prompt)
+    documento_selecionado = selecionar_documento(context)
 
     while True:
         try:
@@ -29,7 +30,7 @@ def bot(prompt):
             Você deve gerar respostas utilizando o contexto abaixo.
             Você deve adotar a persona abaixo
             #Contexto
-            {context}
+            {documento_selecionado}
 
             #Persona
             {personalidade}
